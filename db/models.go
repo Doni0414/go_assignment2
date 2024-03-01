@@ -1,28 +1,36 @@
 package db
 
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
+
 type Student struct {
 	Id           uint `gorm:"primaryKey"`
 	FullName     string
 	Age          uint
 	City         string
-	Courses      []Course
+	Courses      []Course `gorm:"many2many:enrollments;constraint:OnDelete:CASCADE;"`
 	DepartmentId uint
+	CreatedAt    time.Time
 }
 
 type Course struct {
 	Id           uint `gorm:"primaryKey"`
 	Name         string
-	Students     []Student
+	Students     []Student `gorm:"many2many:enrollments;constraint:OnDelete:CASCADE;"`
 	DepartmentId uint
 	InstructorId uint
+	DeletedAt    gorm.DeletedAt
 }
 
 type Department struct {
 	Id          uint `gorm:"primaryKey"`
 	Name        string
-	Students    []Student
-	Courses     []Course
-	Instructors []Instructor
+	Students    []Student    `gorm:"foreignKey:DepartmentId"`
+	Courses     []Course     `gorm:"foreignKey:DepartmentId"`
+	Instructors []Instructor `gorm:"foreignKey:DepartmentId"`
 }
 
 type Instructor struct {
@@ -30,7 +38,8 @@ type Instructor struct {
 	FullName     string
 	Age          uint
 	DepartmentId uint
-	Courses      []Course
+	Courses      []Course `gorm:"foreignKey:InstructorId;constraint:OnDelete:SET NULL;"`
+	UpdatedAt    time.Time
 }
 
 type Enrollment struct {
