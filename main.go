@@ -25,6 +25,4 @@ func main() {
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s timeZone=%s", host, user, password, dbname, port, sslmode, timeZone)
 
 	db.Connect(dsn)
-
-	db.MigrateAllTables()
 }

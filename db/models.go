@@ -46,3 +46,14 @@ type Enrollment struct {
 	StudentId uint
 	CourseId  uint
 }
+
+func (student *Student) BeforeCreate(tx *gorm.DB) error {
+	currentTime := time.Now()
+	student.CreatedAt = currentTime
+	return nil
+}
+
+func (instructor *Instructor) BeforeUpdate(tx *gorm.DB) error {
+	instructor.UpdatedAt = time.Now()
+	return nil
+}

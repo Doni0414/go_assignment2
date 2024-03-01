@@ -171,20 +171,33 @@ type APIDepartment struct {
 	StudentCount uint
 }
 
-type APICourse struct {
-	ID           uint
-	Name         string
-	StudentCount uint
-}
-
 func GetStudentCountForEachDepartment() []APIDepartment {
 	var apiDepartments []APIDepartment
-	db.Model(&Department{}).Select("departments.id, departments.name, COUNT(*) as student_count").Joins("inner join students on departments.id = students.department_id").Group("departments.id, departments.name").Find(&apiDepartments)
+	//SELECT departments.id, departments.name, COUNT(*) as student_count FROM departments
+	//INNER JOIN students on departments.id = students.department_id
+	//GROUP BY departments.id, departments.name
+	db.Model(&Department{}).Select("departments.id, departments.name, COUNT(*) as student_count").
+		Joins("inner join students on departments.id = students.department_id").
+		Group("departments.id, departments.name").
+		Find(&apiDepartments)
 	return apiDepartments
 }
 
 func GetStudentsOfInstructor(instructorId uint) []Student {
 	var students []Student
-	db.Model(&Instructor{}).Select("students.id, students.full_name, students.age, students.city, students.department_id, students.created_at").Where("instructor_id = ?", instructorId).Joins("inner join courses on instructors.id = courses.instructor_id inner join enrollments on courses.id = enrollments.course_id inner join students on enrollments.student_id = students.id").Group("students.id, students.full_name, students.age, students.city, students.department_id, students.created_at").Find(&students)
+	//SELECT students.id, students.full_name, students.age, students.city, students.department_id, students.created_at
+	//FROM instructors
+	//INNER JOIN courses on instructors.id = courses.instructor_id
+	//INNER JOIN enrollments on courses.id = enrollments.course_id
+	//INNER JOIN students on enrollments.student_id = students.id
+	//GROUP BY students.id, students.full_name, students.age, students.city, students.department_id, students.created_at
+	//WHERE instructor_id = ?
+	db.Model(&Instructor{}).Select("students.id, students.full_name, students.age, students.city, students.department_id, students.created_at").
+		Where("instructor_id = ?", instructorId).
+		Joins(`inner join courses on instructors.id = courses.instructor_id 
+	inner join enrollments on courses.id = enrollments.course_id 
+	inner join students on enrollments.student_id = students.id`).
+		Group("students.id, students.full_name, students.age, students.city, students.department_id, students.created_at").
+		Find(&students)
 	return students
 }
