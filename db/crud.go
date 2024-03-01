@@ -30,6 +30,13 @@ func FindStudentsByAge(age int) []Student {
 
 func GetStudentEnrolledCoursesByStudentId(studentId uint) []Course {
 	var student Student
+	//SELECT courses.id, courses.name, courses.department_id, courses.instructor_id
+	//FROM students
+	//INNER JOIN enrollments
+	//ON enrollments.student_id = students.id
+	//INNER JOIN courses
+	//ON courses.id = enrollments.course_id
+	// WHERE students.id = ?
 	db.Model(&Student{}).Where("id = ?", studentId).Preload("Courses").First(&student)
 	return student.Courses
 }
