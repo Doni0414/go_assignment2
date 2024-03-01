@@ -16,7 +16,7 @@ func Connect(dsn string) {
 }
 
 func MigrateAllTables() {
-	db.AutoMigrate(&Student{}, &Course{}, &Department{}, &Enrollment{}, &Instructor{})
+	db.AutoMigrate(&Department{}, &Student{}, &Course{}, &Instructor{})
 }
 
 func MigrateTable(table interface{}) {

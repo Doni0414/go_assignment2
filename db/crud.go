@@ -1,7 +1,7 @@
 package db
 
-func CreateStudent(student *Student) {
-	db.Create(student)
+func CreateStudent(student Student) {
+	db.Create(&student)
 }
 
 func FindAllStudents() []Student {
@@ -10,28 +10,34 @@ func FindAllStudents() []Student {
 	return students
 }
 
-func FindStudentsByAge(age int) []Student {
-	var students []Student
-	db.Where("age = ?", age).Find(&students)
-	return students
+func FindStudentById(id int) Student {
+	student := Student{}
+	db.First(&student, id)
+	return student
 }
 
-func UpdateStudentAge(student *Student, age int) {
-	db.Model(student).Update("Age", age)
+func UpdateStudent(student Student, studentWithUpdatedFields Student) {
+	db.Model(&student).Updates(&studentWithUpdatedFields)
 }
 
-func DeleteStudent(student *Student) {
-	db.Delete(student)
+func DeleteStudent(student Student) {
+	db.Delete(&student)
 }
 
 // COURSES
-func CreateCourse(course *Course) {
-	db.Create(course)
+func CreateCourse(course Course) {
+	db.Create(&course)
 }
 
 func FindAllCourses() []Course {
 	var courses []Course
 	db.Find(&courses)
+	return courses
+}
+
+func FindAllCoursesByInstructorId(instructorId uint) []Course {
+	var courses []Course
+	db.Where("instructor_id = ?", instructorId).Find(&courses)
 	return courses
 }
 
@@ -41,17 +47,17 @@ func FindCourseById(id int) Course {
 	return course
 }
 
-func UpdateCourse(course *Course, courseWithUpdatedFields *Course) {
-	db.Model(course).Updates(courseWithUpdatedFields)
+func UpdateCourse(course Course, courseWithUpdatedFields Course) {
+	db.Model(&course).Updates(&courseWithUpdatedFields)
 }
 
-func DeleteCourse(course *Course) {
-	db.Delete(course)
+func DeleteCourse(course Course) {
+	db.Delete(&course)
 }
 
 // DEPARTMENT
-func CreateDepartment(department *Department) {
-	db.Create(department)
+func CreateDepartment(department Department) {
+	db.Create(&department)
 }
 
 func FindAllDepartments() []Department {
@@ -66,19 +72,17 @@ func FindDepartmentById(id int) Department {
 	return department
 }
 
-func UpdateDepartment(department *Department, departmentWithUpdatedFields *Department) {
-	db.Model(department).Updates(departmentWithUpdatedFields)
+func UpdateDepartment(department Department, departmentWithUpdatedFields Department) {
+	db.Model(&department).Updates(&departmentWithUpdatedFields)
 }
 
-func DeleteDepartment(department *Department) {
-	db.Delete(department)
+func DeleteDepartment(department Department) {
+	db.Delete(&department)
 }
-
-//Enrollment
 
 // Instructor
-func CreateInstructor(instructor *Instructor) {
-	db.Create(instructor)
+func CreateInstructor(instructor Instructor) {
+	db.Create(&instructor)
 }
 
 func FindAllInstructors() []Instructor {
@@ -93,10 +97,10 @@ func FindInstructorById(id int) Instructor {
 	return instructor
 }
 
-func UpdateInstructor(instructor *Instructor, instructorWithUpdatedFields *Instructor) {
-	db.Model(instructor).Updates(instructorWithUpdatedFields)
+func UpdateInstructor(instructor Instructor, instructorWithUpdatedFields Instructor) {
+	db.Model(&instructor).Updates(&instructorWithUpdatedFields)
 }
 
-func DeleteInstructor(instructor *Instructor) {
-	db.Delete(instructor)
+func DeleteInstructor(instructor Instructor) {
+	db.Delete(&instructor)
 }
